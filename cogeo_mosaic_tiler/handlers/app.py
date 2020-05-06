@@ -13,12 +13,12 @@ from boto3.session import Session as boto3_session
 from lambda_proxy.proxy import API
 from rasterio.session import AWSSession
 from rio_tiler.colormap import get_colormap
-from rio_tiler.io.cogeo import tile as cogeoTiler
 from rio_tiler.profiles import img_profiles
 from rio_tiler.reader import multi_point
 from rio_tiler.utils import geotiff_options, render
 from rio_tiler_mosaic.methods import defaults
 from rio_tiler_mosaic.mosaic import mosaic_tiler
+from usgs_topo_tiler import tile as usgs_tiler
 
 from cogeo_mosaic import version as mosaic_version
 from cogeo_mosaic.backends import MosaicBackend
@@ -434,7 +434,7 @@ def _img(
             x,
             y,
             z,
-            cogeoTiler,
+            usgs_tiler,
             indexes=indexes,
             tilesize=tilesize,
             pixel_selection=pixsel_method(),
