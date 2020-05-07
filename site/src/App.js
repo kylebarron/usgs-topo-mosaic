@@ -5,9 +5,9 @@ import ReactMapGL, { Source, Layer } from "react-map-gl";
 class App extends React.Component {
   state = {
       viewport: {
-        latitude: 37.8,
-        longitude: -122.4,
-        zoom: 14,
+        latitude: 36.08507,
+        longitude: -112.08867,
+        zoom: 12.66,
         bearing: 0,
         pitch: 0
       }
