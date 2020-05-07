@@ -1,10 +1,10 @@
-service: cogeo-mosaic
+service: usgs-topo-mosaic
 
 provider:
   name: aws
   runtime: python3.7
   stage: ${opt:stage, 'production'}
-  region: ${opt:region, 'us-east-1'}
+  region: 'us-east-1'
   httpApi:
     cors: true
 
