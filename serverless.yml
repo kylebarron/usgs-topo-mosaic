@@ -34,7 +34,7 @@ package:
 
 functions:
   app:
-    handler: cogeo_mosaic_tiler.handlers.app.app
+    handler: usgs_topo_mosaic.handlers.app.app
     memorySize: 1536
     timeout: 10
     layers:

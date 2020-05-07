@@ -2,7 +2,7 @@
 
 import pytest
 
-from cogeo_mosaic_tiler import custom_cmaps
+from usgs_topo_mosaic import custom_cmaps
 
 
 def test_cmap():

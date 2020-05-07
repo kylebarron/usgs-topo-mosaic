@@ -1,4 +1,4 @@
-"""tests cogeo_mosaic_tiler.handlers.app."""
+"""tests usgs_topo_mosaic.handlers.app."""
 
 import base64
 import json
@@ -91,7 +91,7 @@ def app():
     """cogeo-mosaic-tiler handler fixture."""
     # HACK: We import the app in a test function to make sure the boto3_session uses
     # the monkeypatched env
-    from cogeo_mosaic_tiler.handlers.app import app
+    from usgs_topo_mosaic.handlers.app import app
 
     return app
 
@@ -120,8 +120,8 @@ def test_favicon(app, event):
     assert res == resp
 
 
-@patch("cogeo_mosaic_tiler.handlers.app._aws_head_object")
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app._aws_head_object")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_add_mosaic(backend, head, app, event):
     """Test /add route."""
     event["path"] = "/add"
@@ -159,7 +159,7 @@ def test_add_mosaic(backend, head, app, event):
     backend.assert_not_called()
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_create_mosaic(backend, app, event):
     """Test /create route."""
     event["path"] = "/create"
@@ -189,7 +189,7 @@ def test_create_mosaic(backend, app, event):
     assert backend.call_count == 2
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_create_mosaicPNG(backend, app, event):
     """Test /create route."""
     event["path"] = "/create"
@@ -220,7 +220,7 @@ def test_create_mosaicPNG(backend, app, event):
     backend.assert_called_once()
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_create_mosaicMVT(backend, app, event):
     """Test /create route."""
     event["path"] = "/create"
@@ -251,7 +251,7 @@ def test_create_mosaicMVT(backend, app, event):
     backend.assert_called_once()
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_info(backend, app, event):
     """Test /info route."""
     event["path"] = "/info"
@@ -296,7 +296,7 @@ def test_info(backend, app, event):
     backend.assert_called_once()
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_info_mosaicid(backend, app, event):
     """Test /info route."""
     event["path"] = "/b99dd7e8cc284c6da4d2899e16b6ff85c8ab97041ae7b459eb67e516/info"
@@ -321,7 +321,7 @@ def test_info_mosaicid(backend, app, event):
     backend.assert_called_once()
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_info_MissingUrl(backend, app, event):
     """Test /info route."""
     event["path"] = "/info"
@@ -332,7 +332,7 @@ def test_info_MissingUrl(backend, app, event):
     backend.assert_not_called()
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_geojson_mosaicid(backend, app, event):
     """Test /geojson route."""
     event["path"] = "/b99dd7e8cc284c6da4d2899e16b6ff85c8ab97041ae7b459eb67e516/geojson"
@@ -352,7 +352,7 @@ def test_geojson_mosaicid(backend, app, event):
     backend.assert_called_once()
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_geojson_MissingUrl(backend, app, event):
     """Test /geojson route."""
     event["path"] = "/geojson"
@@ -363,7 +363,7 @@ def test_geojson_MissingUrl(backend, app, event):
     backend.assert_not_called()
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_tilejson(backend, app, event):
     """Test /tilejson.json route."""
     event["path"] = "/tilejson.json"
@@ -432,7 +432,7 @@ def test_tilejson(backend, app, event):
     assert qs["url"][0] == "s3://my-bucket/mymosaic.json"
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_tilejson_mosaicid(backend, app, event):
     """Test /tilejson.json route."""
     event[
@@ -467,7 +467,7 @@ def test_tilejson_mosaicid(backend, app, event):
     assert qs["rescale"][0] == "-1,1"
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_get_mosaic_wmts(backend, app, event):
     """Test WMTS."""
     event["path"] = "/wmts"
@@ -495,7 +495,7 @@ def test_get_mosaic_wmts(backend, app, event):
     backend.assert_called_once()
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_get_mosaic_wmts_mosaicid(backend, app, event):
     """Test /wmts route."""
     event["path"] = "/b99dd7e8cc284c6da4d2899e16b6ff85c8ab97041ae7b459eb67e516/wmts"
@@ -522,7 +522,7 @@ def test_get_mosaic_wmts_mosaicid(backend, app, event):
     backend.assert_called_once()
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_API_errors(backend, app, event):
     """Test /tiles routes."""
     # missing URL
@@ -545,7 +545,7 @@ def test_API_errors(backend, app, event):
     assert res["body"] == "No assets found for tile 9-300-182"
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_API_tiles(backend, app, event):
     """Test /tiles routes."""
     backend.side_effect = MosaicMock
@@ -680,7 +680,7 @@ def test_API_tiles(backend, app, event):
     assert res["body"]
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_API_MVTtiles(backend, app, event):
     """Test /tiles routes."""
     backend.side_effect = MosaicMock
@@ -709,7 +709,7 @@ def test_API_MVTtiles(backend, app, event):
     assert res["body"]
 
 
-@patch("cogeo_mosaic_tiler.handlers.app.MosaicBackend")
+@patch("usgs_topo_mosaic.handlers.app.MosaicBackend")
 def test_API_points(backend, app, event):
     """Test /point routes."""
     backend.side_effect = MosaicMock

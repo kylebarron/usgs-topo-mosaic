@@ -1,1 +1,1 @@
-"""cogeo_mosaic_tiler: handlers."""
+"""usgs_topo_mosaic: handlers."""
