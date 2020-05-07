@@ -69,6 +69,12 @@ provider:
        - "s3:HeadObject"
      Resource:
        - "arn:aws:s3:::*"
+  - Effect: "Allow"
+    Action:
+      - "dynamodb:GetItem"
+    Resource:
+      # Allow access to all dynamodb tables in region
+      - "arn:aws:dynamodb:${self:provider.region}:961053664803:table/*"
 
 package:
   artifact: package.zip
