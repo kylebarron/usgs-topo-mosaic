@@ -1,4 +1,4 @@
-"""Setup cogeo-mosaic."""
+"""Setup usgs-topo-mosaic."""
 
 from setuptools import find_packages, setup
 
@@ -18,7 +18,7 @@ extra_reqs = {
 }
 
 setup(
-    name="cogeo-mosaic-tiler",
+    name="usgs-topo-mosaic",
     version="0.0.2",
     description=u"Serve Map tile from Cloud Optimized GeoTIFF mosaics.",
     long_description=u"Serve Map tile from Cloud Optimized GeoTIFF mosaics.",
@@ -26,14 +26,15 @@ setup(
     classifiers=[
         "Intended Audience :: Information Technology",
         "Intended Audience :: Science/Research",
-        "License :: OSI Approved :: BSD License",
+        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
     ],
     keywords="COG COGEO Mosaic GIS",
-    author=u"Vincent Sarago",
-    author_email="vincent@developmentseed.org",
-    url="https://github.com/developmentseed/cogeo-mosaic-tiler",
+    author="Kyle Barron",
+    author_email="kylebarron2@gmail.com",
+    url="https://github.com/kylebarron/usgs-topo-mosaic",
     license="MIT",
     packages=find_packages(exclude=["ez_setup", "examples", "tests"]),
     include_package_data=True,
