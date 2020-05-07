@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/usgs-topo-mosaic/static/css/main.5f361e03.chunk.css",
+    "main.js": "/usgs-topo-mosaic/static/js/main.5b453134.chunk.js",
+    "main.js.map": "/usgs-topo-mosaic/static/js/main.5b453134.chunk.js.map",
+    "runtime-main.js": "/usgs-topo-mosaic/static/js/runtime-main.7a4cffda.js",
+    "runtime-main.js.map": "/usgs-topo-mosaic/static/js/runtime-main.7a4cffda.js.map",
+    "static/js/2.6d9fb2b6.chunk.js": "/usgs-topo-mosaic/static/js/2.6d9fb2b6.chunk.js",
+    "static/js/2.6d9fb2b6.chunk.js.map": "/usgs-topo-mosaic/static/js/2.6d9fb2b6.chunk.js.map",
+    "index.html": "/usgs-topo-mosaic/index.html",
+    "precache-manifest.7fe38b3cd3ef2eddfaee25396a0b5275.js": "/usgs-topo-mosaic/precache-manifest.7fe38b3cd3ef2eddfaee25396a0b5275.js",
+    "service-worker.js": "/usgs-topo-mosaic/service-worker.js",
+    "static/css/main.5f361e03.chunk.css.map": "/usgs-topo-mosaic/static/css/main.5f361e03.chunk.css.map",
+    "static/js/2.6d9fb2b6.chunk.js.LICENSE.txt": "/usgs-topo-mosaic/static/js/2.6d9fb2b6.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.7a4cffda.js",
+    "static/js/2.6d9fb2b6.chunk.js",
+    "static/css/main.5f361e03.chunk.css",
+    "static/js/main.5b453134.chunk.js"
+  ]
+}
