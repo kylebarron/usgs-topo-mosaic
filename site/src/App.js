@@ -3,20 +3,22 @@ import "./App.css";
 import ReactMapGL, { Source, Layer } from "react-map-gl";
 import { getViewStateFromHash } from "./util";
 
+const mapStyle = require("./style.json");
+
 const defaultViewport = {
   latitude: 36.08507,
   longitude: -112.08867,
   zoom: 12.66,
   bearing: 0,
-  pitch: 0
+  pitch: 0,
 };
 
 class App extends React.Component {
   state = {
     viewport: {
       ...defaultViewport,
-      ...getViewStateFromHash(window.location.hash)
-    }
+      ...getViewStateFromHash(window.location.hash),
+    },
   };
 
   usgsTopoUrl = () => {
@@ -37,8 +39,8 @@ class App extends React.Component {
         width="100vw"
         height="100vh"
         mapOptions={{ hash: true }}
-        mapStyle="https://raw.githubusercontent.com/kylebarron/fiord-color-gl-style/master/style.json"
-        onViewportChange={viewport => this.setState({ viewport })}
+        mapStyle={mapStyle}
+        onViewportChange={(viewport) => this.setState({ viewport })}
       >
         <Source
           id="usgs-topo"
@@ -48,7 +50,8 @@ class App extends React.Component {
           tiles={[this.usgsTopoUrl()]}
           tileSize={512}
         >
-          <Layer id="naip-lambda-layer" type="raster" minzoom={11} />
+          <Layer id="naip-lambda-layer" type="raster" beforeId="place_other" />
+        </Source>
         </Source>
       </ReactMapGL>
     );
