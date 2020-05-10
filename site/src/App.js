@@ -52,6 +52,29 @@ class App extends React.Component {
         >
           <Layer id="naip-lambda-layer" type="raster" beforeId="place_other" />
         </Source>
+
+        <Source
+          id="terrarium"
+          type="raster-dem"
+          minzoom={0}
+          maxzoom={15}
+          tileSize={256}
+          encoding="terrarium"
+          tiles={[
+            "https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png",
+          ]}
+        >
+          <Layer
+            id="terrarium-layer"
+            type="hillshade"
+            paint={{
+              "hillshade-shadow-color": "hsl(39, 21%, 33%)",
+              "hillshade-illumination-anchor": "map",
+              "hillshade-illumination-direction": 315,
+              "hillshade-exaggeration": 0.3,
+            }}
+            beforeId="place_other"
+          />
         </Source>
       </ReactMapGL>
     );
