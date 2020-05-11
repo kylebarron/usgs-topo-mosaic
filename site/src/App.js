@@ -1,6 +1,11 @@
 import React from "react";
 import "./App.css";
-import ReactMapGL, { Source, Layer } from "react-map-gl";
+import ReactMapGL, {
+  Source,
+  Layer,
+  NavigationControl,
+  ScaleControl,
+} from "react-map-gl";
 import { getViewStateFromHash } from "./util";
 
 const mapStyle = require("./style.json");
@@ -47,10 +52,9 @@ class App extends React.Component {
       tile_format: "jpg",
     };
     const searchParams = new URLSearchParams(params);
-    let baseUrl =
+    const baseUrl =
       "https://us-west-2-lambda.kylebarron.dev/usgs-topo/tilejson.json?";
-    baseUrl += searchParams.toString();
-    return baseUrl;
+    return baseUrl + searchParams.toString();
   };
 
   render() {
@@ -147,6 +151,14 @@ class App extends React.Component {
             beforeId="place_other"
           />
         </Source>
+
+        <div style={{ position: "absolute", right: 10, top: 10 }}>
+          <NavigationControl />
+        </div>
+
+        <div style={{ position: "absolute", bottom: 10, left: 10 }}>
+          <ScaleControl maxWidth={100} unit={"imperial"} />
+        </div>
       </ReactMapGL>
     );
   }
