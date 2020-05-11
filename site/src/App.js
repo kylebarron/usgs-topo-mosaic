@@ -33,6 +33,19 @@ const urls = {
   },
 };
 
+// Construct tilejson url for mosaic url
+function usgsTopoUrl(url) {
+  const params = {
+    url,
+    tile_scale: 2,
+    tile_format: "jpg",
+  };
+  const searchParams = new URLSearchParams(params);
+  const baseUrl =
+    "https://us-west-2-lambda.kylebarron.dev/usgs-topo/tilejson.json?";
+  return baseUrl + searchParams.toString();
+}
+
 class App extends React.Component {
   state = {
     viewport: {
@@ -43,22 +56,11 @@ class App extends React.Component {
     mosaic_choice: "newest",
     // Choice of either "auto", "low", "medium", or "high" scale
     scale_choice: "auto",
-  };
-
-  usgsTopoUrl = (url) => {
-    const params = {
-      url,
-      tile_scale: 2,
-      tile_format: "jpg",
-    };
-    const searchParams = new URLSearchParams(params);
-    const baseUrl =
-      "https://us-west-2-lambda.kylebarron.dev/usgs-topo/tilejson.json?";
-    return baseUrl + searchParams.toString();
+    opacity: 1,
   };
 
   render() {
-    const { mosaic_choice, scale_choice, viewport } = this.state;
+    const { mosaic_choice, scale_choice, viewport, opacity } = this.state;
     const { latitude } = viewport;
     return (
       <ReactMapGL
@@ -72,13 +74,16 @@ class App extends React.Component {
         <Source
           id="usgs-topo-low-zoom"
           type="raster"
-          url={this.usgsTopoUrl(urls.low[mosaic_choice])}
+          url={usgsTopoUrl(urls.low[mosaic_choice])}
         >
           <Layer
             maxzoom={scale_choice === "auto" ? 10 : 24}
             id="usgs-topo-low-zoom-layer"
             type="raster"
             beforeId="place_other"
+            paint={{
+              "raster-opacity": opacity,
+            }}
             layout={{
               visibility:
                 scale_choice === "auto" || scale_choice === "low"
@@ -91,7 +96,7 @@ class App extends React.Component {
         <Source
           id="usgs-topo-medium-zoom"
           type="raster"
-          url={this.usgsTopoUrl(urls.medium[mosaic_choice])}
+          url={usgsTopoUrl(urls.medium[mosaic_choice])}
         >
           <Layer
             minzoom={scale_choice === "auto" ? 10 : 0}
@@ -100,6 +105,9 @@ class App extends React.Component {
             id="usgs-topo-medium-zoom-layer"
             type="raster"
             beforeId="place_other"
+            paint={{
+              "raster-opacity": opacity,
+            }}
             layout={{
               visibility:
                 scale_choice === "auto" || scale_choice === "medium"
@@ -112,13 +120,16 @@ class App extends React.Component {
         <Source
           id="usgs-topo-high-zoom"
           type="raster"
-          url={this.usgsTopoUrl(urls.high[mosaic_choice])}
+          url={usgsTopoUrl(urls.high[mosaic_choice])}
         >
           <Layer
             minzoom={scale_choice === "auto" ? 12 : 0}
             id="usgs-topo-high-zoom-layer"
             type="raster"
             beforeId="place_other"
+            paint={{
+              "raster-opacity": opacity,
+            }}
             layout={{
               visibility:
                 scale_choice === "auto" || scale_choice === "high"
