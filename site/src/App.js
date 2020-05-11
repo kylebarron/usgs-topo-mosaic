@@ -12,9 +12,9 @@ import { Checkbox, Card, Select, Form, Header } from "semantic-ui-react";
 const mapStyle = require("./style.json");
 
 const defaultViewport = {
-  latitude: 36.08507,
-  longitude: -112.08867,
-  zoom: 12.66,
+  latitude: 37.73817,
+  longitude: -119.59118,
+  zoom: 12.14,
   bearing: 0,
   pitch: 0,
 };
