@@ -7,6 +7,16 @@ import ReactMapGL, {
   ScaleControl,
 } from "react-map-gl";
 import { getViewStateFromHash } from "./util";
+import {
+  Container,
+  Accordion,
+  Checkbox,
+  Card,
+  Grid,
+  List,
+  Icon,
+  Header,
+} from "semantic-ui-react";
 
 const mapStyle = require("./style.json");
 
@@ -57,10 +67,23 @@ class App extends React.Component {
     // Choice of either "auto", "low", "medium", or "high" scale
     scale_choice: "auto",
     opacity: 1,
+    terrainRelief: true,
+  };
+
+  _toggleState = (name) => {
+    this.setState((prevState) => ({
+      [name]: !prevState[name],
+    }));
   };
 
   render() {
-    const { mosaic_choice, scale_choice, viewport, opacity } = this.state;
+    const {
+      mosaic_choice,
+      scale_choice,
+      viewport,
+      opacity,
+      terrainRelief,
+    } = this.state;
     const { latitude } = viewport;
     return (
       <ReactMapGL
@@ -159,6 +182,9 @@ class App extends React.Component {
               "hillshade-illumination-direction": 315,
               "hillshade-exaggeration": 0.3,
             }}
+            layout={{
+              visibility: terrainRelief ? "visible" : "none",
+            }}
             beforeId="place_other"
           />
         </Source>
@@ -170,6 +196,33 @@ class App extends React.Component {
         <div style={{ position: "absolute", bottom: 10, left: 10 }}>
           <ScaleControl maxWidth={100} unit={"imperial"} />
         </div>
+        <Card
+          style={{
+            position: "absolute",
+            width: 280,
+            maxWidth: 400,
+            left: 10,
+            top: 10,
+            padding: 5,
+            maxHeight: "70%",
+            zIndex: 1,
+            backgroundColor: "#fff",
+            pointerEvents: "auto",
+            overflowY: "auto",
+          }}
+        >
+          <Header as="h3">
+            <Header.Content>
+              Serverless USGS Historical Topo Maps
+            </Header.Content>
+          </Header>
+
+          <Checkbox
+            label="Show terrain relief shading"
+            onChange={() => this._toggleState("terrainRelief")}
+            checked={terrainRelief}
+          />
+        </Card>
       </ReactMapGL>
     );
   }
