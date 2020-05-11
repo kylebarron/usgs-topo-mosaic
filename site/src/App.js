@@ -50,12 +50,12 @@ const scaleChoiceOptions = [
 function usgsTopoUrl(url) {
   const params = {
     url,
-    tile_scale: 2,
-    tile_format: "jpg",
+    // tile_scale: 2,
+    // tile_format: "jpg",
   };
   const searchParams = new URLSearchParams(params);
   const baseUrl =
-    "https://us-west-2-lambda.kylebarron.dev/usgs-topo/tilejson.json?";
+    "https://us-west-2-lambda.kylebarron.dev/usgs-topo/{z}/{x}/{y}@2x.jpg?";
   return baseUrl + searchParams.toString();
 }
 
@@ -122,7 +122,12 @@ class App extends React.Component {
           <Source
             id="usgs-topo-low-zoom"
             type="raster"
-            url={usgsTopoUrl(urls.low[mosaic_choice])}
+            minzoom={7}
+            maxzoom={12}
+            attribution={
+              '<a href="https://www.usgs.gov/" target="_blank">© USGS</a>'
+            }
+            tiles={[usgsTopoUrl(urls.low[mosaic_choice])]}
           >
             <Layer
               maxzoom={scale_choice === "auto" ? 10 : 24}
@@ -144,7 +149,12 @@ class App extends React.Component {
           <Source
             id="usgs-topo-medium-zoom"
             type="raster"
-            url={usgsTopoUrl(urls.medium[mosaic_choice])}
+            minzoom={9}
+            maxzoom={14}
+            attribution={
+              '<a href="https://www.usgs.gov/" target="_blank">© USGS</a>'
+            }
+            tiles={[usgsTopoUrl(urls.medium[mosaic_choice])]}
           >
             <Layer
               minzoom={scale_choice === "auto" ? 10 : 0}
@@ -168,7 +178,12 @@ class App extends React.Component {
           <Source
             id="usgs-topo-high-zoom"
             type="raster"
-            url={usgsTopoUrl(urls.high[mosaic_choice])}
+            minzoom={11}
+            maxzoom={16}
+            attribution={
+              '<a href="https://www.usgs.gov/" target="_blank">© USGS</a>'
+            }
+            tiles={[usgsTopoUrl(urls.high[mosaic_choice])]}
           >
             <Layer
               minzoom={scale_choice === "auto" ? 12 : 0}
