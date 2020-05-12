@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/usgs-topo-mosaic/precache-manifest.112a8bd4642192585755be3209b8fb3f.js"
+  "/usgs-topo-mosaic/precache-manifest.61edde5287728b61e5dd273f90c82161.js"
 );
 
 self.addEventListener('message', (event) => {
