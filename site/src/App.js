@@ -7,7 +7,14 @@ import ReactMapGL, {
   ScaleControl,
 } from "react-map-gl";
 import { getViewStateFromHash } from "./util";
-import { Checkbox, Card, Select, Header, Container } from "semantic-ui-react";
+import {
+  Accordion,
+  Checkbox,
+  Card,
+  Select,
+  Icon,
+  Container,
+} from "semantic-ui-react";
 import { Map } from "immutable";
 
 const defaultMapStyle = require("./style.json");
@@ -92,6 +99,7 @@ class App extends React.Component {
     opacity: 1,
     terrainRelief: true,
     mapStyle: constructMapStyle("oldest"),
+    optionsExpanded: false,
   };
 
   _toggleState = (name) => {
@@ -226,38 +234,53 @@ class App extends React.Component {
             overflow: "visible",
           }}
         >
-          <Card style={{ padding: 5 }}>
-            <Header as="h4">
-              <Header.Content>
-                Serverless USGS Historical Topo Maps
-              </Header.Content>
-            </Header>
+          <Accordion as={Card} style={{ padding: 5 }}>
+            <Accordion.Title
+              as={Card.Header}
+              as="h3"
+              textAlign="center"
+              active={this.state.optionsExpanded}
+              index={0}
+              onClick={() => this._toggleState("optionsExpanded")}
+            >
+              <Icon name="dropdown" />
+              USGS Historical Topographic Maps
+            </Accordion.Title>
+            <Accordion.Content active={this.state.optionsExpanded}>
+              <p>
+                The entire USGS archive of 183,000 digitized maps created
+                between 1884 and 2006 is publicly accessible online. Explore a
+                portion interactively here.
+              </p>
 
-            <Select
-              options={mosaicChoiceOptions}
-              value={mosaic_choice}
-              onChange={(e, data) =>
-                this.setState({
-                  mosaic_choice: data.value,
-                  mapStyle: constructMapStyle(data.value),
-                })
-              }
-            />
-            <Select
-              options={scaleChoiceOptions}
-              value={scale_choice}
-              onChange={(e, data) =>
-                this.setState({ scale_choice: data.value })
-              }
-            />
+              <Select
+                style={{ width: "100%" }}
+                options={mosaicChoiceOptions}
+                value={mosaic_choice}
+                onChange={(e, data) =>
+                  this.setState({
+                    mosaic_choice: data.value,
+                    mapStyle: constructMapStyle(data.value),
+                  })
+                }
+              />
+              <Select
+                style={{ width: "100%" }}
+                options={scaleChoiceOptions}
+                value={scale_choice}
+                onChange={(e, data) =>
+                  this.setState({ scale_choice: data.value })
+                }
+              />
 
-            <Checkbox
-              label="Terrain relief shading"
-              onChange={() => this._toggleState("terrainRelief")}
-              checked={terrainRelief}
-              style={{ padding: 5 }}
-            />
-          </Card>
+              <Checkbox
+                label="Terrain relief shading"
+                onChange={() => this._toggleState("terrainRelief")}
+                checked={terrainRelief}
+                style={{ padding: 5 }}
+              />
+            </Accordion.Content>
+          </Accordion>
         </Container>
       </div>
     );
