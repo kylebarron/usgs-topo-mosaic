@@ -223,6 +223,7 @@ class App extends React.Component {
             backgroundColor: "#fff",
             pointerEvents: "auto",
             overflowY: "auto",
+            overflow: "visible",
           }}
         >
           <Card style={{ padding: 5 }}>
