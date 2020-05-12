@@ -15,7 +15,7 @@ const defaultMapStyle = require("./style.json");
 const defaultViewport = {
   latitude: 37.73817,
   longitude: -119.59118,
-  zoom: 12.14,
+  zoom: 11,
   bearing: 0,
   pitch: 0,
 };
