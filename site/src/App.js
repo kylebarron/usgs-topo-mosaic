@@ -267,10 +267,6 @@ class App extends React.Component {
                 portion interactively here.
               </p>
 
-              {/* {(scale_choice === "high" && zoom < 11) ||
-                (scale_choice === "medium" && zoom < 9 && (
-                  <p>Zoom in or change map scale to see map</p>
-                ))} */}
               {belowMinZoom(scale_choice, zoom) && (
                 <p>Zoom in or change map scale to see map</p>
               )}
