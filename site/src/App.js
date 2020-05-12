@@ -296,6 +296,29 @@ class App extends React.Component {
                 checked={terrainRelief}
                 style={{ padding: 5 }}
               />
+
+              <p>
+                <p>
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://github.com/kylebarron/usgs-topo-tiler"
+                  >
+                    <Icon name="github" />
+                    Github
+                  </a>
+                </p>
+                {/* <p>
+                  <a
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    href="https://kylebarron.dev/blog"
+                  >
+                    <Icon name="book" />
+                    Blog post
+                  </a>
+                </p> */}
+              </p>
             </Accordion.Content>
           </Accordion>
         </Container>
