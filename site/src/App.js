@@ -86,6 +86,19 @@ function constructMapStyle(mosaic_choice) {
   return Map(defaultMapStyle);
 }
 
+function belowMinZoom(scale_choice, zoom) {
+  if (zoom >= 10.5) {
+    return false;
+  }
+  if (scale_choice === "medium" && zoom >= 8.5) {
+    return false;
+  }
+  if ((scale_choice === "low" || scale_choice === "auto") && zoom >= 6.5) {
+    return false;
+  }
+  return true;
+}
+
 class App extends React.Component {
   state = {
     viewport: {
@@ -120,12 +133,13 @@ class App extends React.Component {
       opacity,
       terrainRelief,
       mapStyle,
+      optionsExpanded,
     } = this.state;
-    const { latitude } = viewport;
+    const { latitude, zoom } = viewport;
     return (
       <div>
         <ReactMapGL
-          {...this.state.viewport}
+          {...viewport}
           width="100vw"
           height="100vh"
           mapOptions={{ hash: true }}
@@ -239,20 +253,27 @@ class App extends React.Component {
               as={Card.Header}
               as="h3"
               textAlign="center"
-              active={this.state.optionsExpanded}
+              active={optionsExpanded}
               index={0}
               onClick={() => this._toggleState("optionsExpanded")}
             >
               <Icon name="dropdown" />
               USGS Historical Topographic Maps
             </Accordion.Title>
-            <Accordion.Content active={this.state.optionsExpanded}>
+            <Accordion.Content active={optionsExpanded}>
               <p>
                 The entire USGS archive of 183,000 digitized maps created
                 between 1884 and 2006 is publicly accessible online. Explore a
                 portion interactively here.
               </p>
 
+              {/* {(scale_choice === "high" && zoom < 11) ||
+                (scale_choice === "medium" && zoom < 9 && (
+                  <p>Zoom in or change map scale to see map</p>
+                ))} */}
+              {belowMinZoom(scale_choice, zoom) && (
+                <p>Zoom in or change map scale to see map</p>
+              )}
               <Select
                 style={{ width: "100%" }}
                 options={mosaicChoiceOptions}
