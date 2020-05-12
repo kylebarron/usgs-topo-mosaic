@@ -60,13 +60,15 @@ make package
 #### Deploy to AWS
 
 This project uses [Serverless][serverless_framework] to easily deploy on AWS.
+You should pass the name of an S3 bucket you have access to (preferably in the
+same region) with the `--bucket` parameter.
 
 [serverless_framework]: https://serverless.com
 
 ```bash
 # Install and Configure serverless (https://serverless.com/framework/docs/providers/aws/guide/credentials/)
 npm install serverless -g
-sls deploy --bucket a-bucket-where-you-store-data
+sls deploy --bucket your-bucket
 ```
 
 The function will be deployed in the `us-west-2` region, because that's where
@@ -76,7 +78,31 @@ region, and also makes USGS's egress bandwidth costs lower.
 
 ## Using
 
-See [/doc/API.md](/doc/API.md) for the documentation.
+At the end of the `sls deploy` step, it should have printed the URL of your
+endpoint to the console. You can now make requests to that URL.
+
+However to actually create image tiles, you still need a MosaicJSON file, which
+tells the tiler which sources to combine for each web tile. Refer to
+[`usgs-topo-tiler`][usgs-topo-tiler]'s documentation for how to create this
+file.
+
+Upload one or more MosaicJSON files to your bucket. Then pass that url with the
+`url` query string. For example, your image endpoint url might look something
+like:
+
+```
+{ENDPOINT_URL}/{z}/{x}/{y}@2x.jpg?url=s3://{bucket}/mosaics/{mosaic_name}.json.gz
+```
+
+Note that all parameters must be correctly URL-encoded, so for example `s3://`
+would need to be escaped.
+
+A [separate documentation file](doc/API.md) has full information about the
+endpoints available. Not all endpoints have been ported yet to work with USGS
+historical maps. I mostly use the `/tilejson.json` and `/z/x/y.jpg` image
+endpoints. The `/create` endpoint is not currently implemented but might be in
+the future.
+
 
 ## About
 
