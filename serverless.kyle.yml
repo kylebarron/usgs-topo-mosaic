@@ -84,7 +84,7 @@ package:
 functions:
   app:
     handler: usgs_topo_mosaic.handlers.app.app
-    memorySize: 1536
+    memorySize: 1024
     timeout: 10
     layers:
       - arn:aws:lambda:${self:provider.region}:524387336408:layer:gdal24-py37-geolayer:1

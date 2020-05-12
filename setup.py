@@ -8,7 +8,7 @@ inst_reqs = [
     "lambda-proxy~=5.2",
     "rio-color",
     "rio-tiler>=2.0a6",
-    "usgs-topo-tiler>=0.1.1",
+    "usgs-topo-tiler>=0.2.0"
 ]
 
 extra_reqs = {
