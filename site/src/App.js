@@ -7,7 +7,7 @@ import ReactMapGL, {
   ScaleControl,
 } from "react-map-gl";
 import { getViewStateFromHash } from "./util";
-import { Checkbox, Card, Select, Header } from "semantic-ui-react";
+import { Checkbox, Card, Select, Header, Container } from "semantic-ui-react";
 import { Map } from "immutable";
 
 const defaultMapStyle = require("./style.json");
@@ -211,14 +211,13 @@ class App extends React.Component {
             <ScaleControl maxWidth={100} unit={"imperial"} />
           </div>
         </ReactMapGL>
-        <Card
+        <Container
           style={{
             position: "absolute",
             width: 280,
             maxWidth: 500,
             left: 10,
             top: 10,
-            padding: 5,
             maxHeight: "70%",
             zIndex: 1,
             backgroundColor: "#fff",
@@ -226,35 +225,39 @@ class App extends React.Component {
             overflowY: "auto",
           }}
         >
-          <Header as="h4">
-            <Header.Content>
-              Serverless USGS Historical Topo Maps
-            </Header.Content>
-          </Header>
+          <Card style={{ padding: 5 }}>
+            <Header as="h4">
+              <Header.Content>
+                Serverless USGS Historical Topo Maps
+              </Header.Content>
+            </Header>
 
-          <Select
-            options={mosaicChoiceOptions}
-            value={mosaic_choice}
-            onChange={(e, data) =>
-              this.setState({
-                mosaic_choice,
-                mapStyle: constructMapStyle(data.value),
-              })
-            }
-          />
-          <Select
-            options={scaleChoiceOptions}
-            value={scale_choice}
-            onChange={(e, data) => this.setState({ scale_choice: data.value })}
-          />
+            <Select
+              options={mosaicChoiceOptions}
+              value={mosaic_choice}
+              onChange={(e, data) =>
+                this.setState({
+                  mosaic_choice,
+                  mapStyle: constructMapStyle(data.value),
+                })
+              }
+            />
+            <Select
+              options={scaleChoiceOptions}
+              value={scale_choice}
+              onChange={(e, data) =>
+                this.setState({ scale_choice: data.value })
+              }
+            />
 
-          <Checkbox
-            label="Terrain relief shading"
-            onChange={() => this._toggleState("terrainRelief")}
-            checked={terrainRelief}
-            style={{ padding: 5 }}
-          />
-        </Card>
+            <Checkbox
+              label="Terrain relief shading"
+              onChange={() => this._toggleState("terrainRelief")}
+              checked={terrainRelief}
+              style={{ padding: 5 }}
+            />
+          </Card>
+        </Container>
       </div>
     );
   }
