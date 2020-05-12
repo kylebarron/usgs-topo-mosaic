@@ -86,12 +86,12 @@ class App extends React.Component {
       ...getViewStateFromHash(window.location.hash),
     },
     // Choice of either "oldest" or "newest" mosaic
-    mosaic_choice: "newest",
+    mosaic_choice: "oldest",
     // Choice of either "auto", "low", "medium", or "high" scale
     scale_choice: "auto",
     opacity: 1,
     terrainRelief: true,
-    mapStyle: constructMapStyle("newest"),
+    mapStyle: constructMapStyle("oldest"),
   };
 
   _toggleState = (name) => {
