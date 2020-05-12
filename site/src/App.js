@@ -49,9 +49,9 @@ const mosaicChoiceOptions = [
 
 const scaleChoiceOptions = [
   { key: "auto", value: "auto", text: "Auto-adjust map scale used" },
-  { key: "low", value: "low", text: "Low-scale map" },
+  { key: "low", value: "low", text: "Small-scale map" },
   { key: "medium", value: "medium", text: "Medium-scale map" },
-  { key: "high", value: "high", text: "High-scale map" },
+  { key: "high", value: "high", text: "Large-scale map" },
 ];
 
 // Construct tilejson url for mosaic url
