@@ -22,16 +22,16 @@ const defaultViewport = {
 
 const urls = {
   high: {
-    newest: "dynamodb://us-west-2/usgs-topo_high_newest_lower_48.v1",
-    oldest: "dynamodb://us-west-2/usgs-topo_high_oldest_lower_48.v1",
+    newest: "dynamodb://us-west-2/usgs-topo_high_newest.v2",
+    oldest: "dynamodb://us-west-2/usgs-topo_high_oldest.v2",
   },
   medium: {
-    newest: "dynamodb://us-west-2/usgs-topo_medium_newest.v1",
-    oldest: "dynamodb://us-west-2/usgs-topo_medium_oldest.v1",
+    newest: "dynamodb://us-west-2/usgs-topo_medium_newest.v2",
+    oldest: "dynamodb://us-west-2/usgs-topo_medium_oldest.v2",
   },
   low: {
-    newest: "dynamodb://us-west-2/usgs-topo_low_newest.v1",
-    oldest: "dynamodb://us-west-2/usgs-topo_low_oldest.v1",
+    newest: "dynamodb://us-west-2/usgs-topo_low_newest.v2",
+    oldest: "dynamodb://us-west-2/usgs-topo_low_oldest.v2",
   },
 };
 
