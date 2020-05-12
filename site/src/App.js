@@ -237,7 +237,7 @@ class App extends React.Component {
               value={mosaic_choice}
               onChange={(e, data) =>
                 this.setState({
-                  mosaic_choice,
+                  mosaic_choice: data.value,
                   mapStyle: constructMapStyle(data.value),
                 })
               }
