@@ -7,9 +7,10 @@ import ReactMapGL, {
   ScaleControl,
 } from "react-map-gl";
 import { getViewStateFromHash } from "./util";
-import { Checkbox, Card, Select, Form, Header } from "semantic-ui-react";
+import { Checkbox, Card, Select, Header } from "semantic-ui-react";
+import { Map } from "immutable";
 
-const mapStyle = require("./style.json");
+const defaultMapStyle = require("./style.json");
 
 const defaultViewport = {
   latitude: 37.73817,
@@ -50,30 +51,32 @@ const scaleChoiceOptions = [
 function usgsTopoUrl(url) {
   const params = {
     url,
-    // tile_scale: 2,
-    // tile_format: "jpg",
+    tile_scale: 2,
+    tile_format: "jpg",
   };
   const searchParams = new URLSearchParams(params);
   const baseUrl =
-    "https://us-west-2-lambda.kylebarron.dev/usgs-topo/{z}/{x}/{y}@2x.jpg?";
+    "https://us-west-2-lambda.kylebarron.dev/usgs-topo/tilejson.json?";
   return baseUrl + searchParams.toString();
 }
 
-function OpacitySlider(props) {
-  const { value, name, onChange } = props;
-
-  return (
-    <Form.Input
-      label={`Opacity: ${value}`}
-      min={0}
-      max={1}
-      name={name}
-      onChange={onChange}
-      step={0.05}
-      type="range"
-      value={value}
-    />
-  );
+function constructMapStyle(mosaic_choice) {
+  defaultMapStyle.sources["usgs-topo-low-zoom"] = {
+    type: "raster",
+    url: usgsTopoUrl(urls.low[mosaic_choice]),
+    attribution: '<a href="https://www.usgs.gov/" target="_blank">© USGS</a>',
+  };
+  defaultMapStyle.sources["usgs-topo-medium-zoom"] = {
+    type: "raster",
+    url: usgsTopoUrl(urls.medium[mosaic_choice]),
+    attribution: '<a href="https://www.usgs.gov/" target="_blank">© USGS</a>',
+  };
+  defaultMapStyle.sources["usgs-topo-high-zoom"] = {
+    type: "raster",
+    url: usgsTopoUrl(urls.high[mosaic_choice]),
+    attribution: '<a href="https://www.usgs.gov/" target="_blank">© USGS</a>',
+  };
+  return Map(defaultMapStyle);
 }
 
 class App extends React.Component {
@@ -88,6 +91,7 @@ class App extends React.Component {
     scale_choice: "auto",
     opacity: 1,
     terrainRelief: true,
+    mapStyle: constructMapStyle("newest"),
   };
 
   _toggleState = (name) => {
@@ -107,6 +111,7 @@ class App extends React.Component {
       viewport,
       opacity,
       terrainRelief,
+      mapStyle,
     } = this.state;
     const { latitude } = viewport;
     return (
@@ -119,88 +124,57 @@ class App extends React.Component {
           mapStyle={mapStyle}
           onViewportChange={(viewport) => this.setState({ viewport })}
         >
-          <Source
-            id="usgs-topo-low-zoom"
+          <Layer
+            maxzoom={scale_choice === "auto" ? 10 : 24}
+            source="usgs-topo-low-zoom"
+            id="usgs-topo-low-zoom-layer"
             type="raster"
-            minzoom={7}
-            maxzoom={12}
-            attribution={
-              '<a href="https://www.usgs.gov/" target="_blank">© USGS</a>'
-            }
-            tiles={[usgsTopoUrl(urls.low[mosaic_choice])]}
-          >
-            <Layer
-              maxzoom={scale_choice === "auto" ? 10 : 24}
-              id="usgs-topo-low-zoom-layer"
-              type="raster"
-              beforeId="place_other"
-              paint={{
-                "raster-opacity": opacity,
-              }}
-              layout={{
-                visibility:
-                  scale_choice === "auto" || scale_choice === "low"
-                    ? "visible"
-                    : "none",
-              }}
-            />
-          </Source>
+            beforeId="place_other"
+            paint={{
+              "raster-opacity": opacity,
+            }}
+            layout={{
+              visibility:
+                scale_choice === "auto" || scale_choice === "low"
+                  ? "visible"
+                  : "none",
+            }}
+          />
 
-          <Source
-            id="usgs-topo-medium-zoom"
+          <Layer
+            minzoom={scale_choice === "auto" ? 10 : 0}
+            // Use mid-scale maps in Alaska on auto
+            maxzoom={scale_choice === "auto" && latitude <= 50 ? 12 : 24}
+            source="usgs-topo-medium-zoom"
+            id="usgs-topo-medium-zoom-layer"
             type="raster"
-            minzoom={9}
-            maxzoom={14}
-            attribution={
-              '<a href="https://www.usgs.gov/" target="_blank">© USGS</a>'
-            }
-            tiles={[usgsTopoUrl(urls.medium[mosaic_choice])]}
-          >
-            <Layer
-              minzoom={scale_choice === "auto" ? 10 : 0}
-              // Use mid-scale maps in Alaska on auto
-              maxzoom={scale_choice === "auto" && latitude <= 50 ? 12 : 24}
-              id="usgs-topo-medium-zoom-layer"
-              type="raster"
-              beforeId="place_other"
-              paint={{
-                "raster-opacity": opacity,
-              }}
-              layout={{
-                visibility:
-                  scale_choice === "auto" || scale_choice === "medium"
-                    ? "visible"
-                    : "none",
-              }}
-            />
-          </Source>
-
-          <Source
-            id="usgs-topo-high-zoom"
+            beforeId="place_other"
+            paint={{
+              "raster-opacity": opacity,
+            }}
+            layout={{
+              visibility:
+                scale_choice === "auto" || scale_choice === "medium"
+                  ? "visible"
+                  : "none",
+            }}
+          />
+          <Layer
+            minzoom={scale_choice === "auto" ? 12 : 0}
+            source="usgs-topo-high-zoom"
+            id="usgs-topo-high-zoom-layer"
             type="raster"
-            minzoom={11}
-            maxzoom={16}
-            attribution={
-              '<a href="https://www.usgs.gov/" target="_blank">© USGS</a>'
-            }
-            tiles={[usgsTopoUrl(urls.high[mosaic_choice])]}
-          >
-            <Layer
-              minzoom={scale_choice === "auto" ? 12 : 0}
-              id="usgs-topo-high-zoom-layer"
-              type="raster"
-              beforeId="place_other"
-              paint={{
-                "raster-opacity": opacity,
-              }}
-              layout={{
-                visibility:
-                  scale_choice === "auto" || scale_choice === "high"
-                    ? "visible"
-                    : "none",
-              }}
-            />
-          </Source>
+            beforeId="place_other"
+            paint={{
+              "raster-opacity": opacity,
+            }}
+            layout={{
+              visibility:
+                scale_choice === "auto" || scale_choice === "high"
+                  ? "visible"
+                  : "none",
+            }}
+          />
 
           <Source
             id="terrarium"
@@ -261,7 +235,12 @@ class App extends React.Component {
           <Select
             options={mosaicChoiceOptions}
             value={mosaic_choice}
-            onChange={(e, data) => this.setState({ mosaic_choice: data.value })}
+            onChange={(e, data) =>
+              this.setState({
+                mosaic_choice,
+                mapStyle: constructMapStyle(data.value),
+              })
+            }
           />
           <Select
             options={scaleChoiceOptions}
@@ -274,11 +253,6 @@ class App extends React.Component {
             onChange={() => this._toggleState("terrainRelief")}
             checked={terrainRelief}
             style={{ padding: 5 }}
-          />
-          <OpacitySlider
-            name="opacity"
-            value={opacity}
-            onChange={this._onChangeOpacity}
           />
         </Card>
       </div>
