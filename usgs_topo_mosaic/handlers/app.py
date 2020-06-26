@@ -20,7 +20,6 @@ from rio_tiler_mosaic.methods import defaults
 from rio_tiler_mosaic.mosaic import mosaic_tiler
 from usgs_topo_mosaic import custom_methods
 from usgs_topo_mosaic.custom_cmaps import get_custom_cmap
-from usgs_topo_mosaic.ogc import wmts_template
 from usgs_topo_mosaic.utils import _aws_head_object, _get_layer_names, _postprocess
 from usgs_topo_tiler import tile as usgs_tiler
 
@@ -265,56 +264,6 @@ def _tilejson(
             "tiles": [tile_url],
         }
     return ("OK", "application/json", json.dumps(response, separators=(",", ":")))
-
-
-@app.get("/wmts", **params)
-@app.get("/<regex([0-9A-Fa-f]{56}):mosaicid>/wmts", **params)
-def _wmts(
-    mosaicid: str = None,
-    url: str = None,
-    tile_format: str = "png",
-    tile_scale: int = 1,
-    title: str = "Cloud Optimizied GeoTIFF Mosaic",
-    **kwargs: Any,
-) -> Tuple:
-    """Handle /wmts requests."""
-    if not mosaicid and not url:
-        return ("NOK", "text/plain", "Missing 'MosaicID or URL' parameter")
-
-    if tile_scale is not None and isinstance(tile_scale, str):
-        tile_scale = int(tile_scale)
-
-    if not mosaicid:
-        kwargs.update(dict(url=url))
-        host = app.host
-    else:
-        host = f"{app.host}/{mosaicid}"
-
-    query_string = urllib.parse.urlencode(list(kwargs.items()))
-    query_string = query_string.replace(
-        "&", "&amp;"
-    )  # & is an invalid character in XML
-    kwargs.pop("SERVICE", None)
-    kwargs.pop("REQUEST", None)
-
-    mosaic_path = _create_mosaic_path(mosaicid) if mosaicid else url
-    with MosaicBackend(mosaic_path) as mosaic:
-        meta = mosaic.metadata
-
-        return (
-            "OK",
-            "application/xml",
-            wmts_template(
-                host,
-                query_string,
-                minzoom=meta["minzoom"],
-                maxzoom=meta["maxzoom"],
-                bounds=meta["bounds"],
-                tile_scale=tile_scale,
-                tile_format=tile_format,
-                title=title,
-            ),
-        )
 
 
 @app.get("/<int:z>/<int:x>/<int:y>.pbf", **params)
