@@ -1,5 +1,7 @@
 # API
 
+**NOTE**: this documentation is copied from `cogeo-mosaic-tiler` and may not be entirely accurate. Open an issue if you can't figure something out.
+
 Online API documentation can be found at `{endpoint}/docs`.
 
 ## mosaicJSON path
@@ -38,7 +40,7 @@ $ sha224sum mosaic.json.gz
 
 ## Using mosaicid
 
-Most of the `GET` requests support using **mosaicid** in the path (prefix) instead of passing an url. When using mosaicid, the tiler will reconscruct a file s3 url and then result to `s3://{bucket}/mosaics/mosaicid.json.gz`, with `{bucket}` set in the environment variable. 
+Most of the `GET` requests support using **mosaicid** in the path (prefix) instead of passing an url. When using mosaicid, the tiler will reconscruct a file s3 url and then result to `s3://{bucket}/mosaics/mosaicid.json.gz`, with `{bucket}` set in the environment variable.
 
 ```python
 # https://github.com/developmentseed/cogeo-mosaic-tiler/blob/1bebcae6c3d8e5d726fc1ba55c40c79d23bdab15/usgs_topo_mosaic/handlers/app.py#L59-L66
