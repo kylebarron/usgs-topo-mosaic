@@ -5,7 +5,7 @@ import os
 import random
 import urllib.parse
 import warnings
-from typing import Any, Optional, Sequence, Tuple, Union
+from typing import Any, Tuple, Union
 
 import mercantile
 import rasterio
@@ -13,11 +13,10 @@ from boto3.session import Session as boto3_session
 from lambda_proxy.proxy import API
 from rasterio.session import AWSSession
 from rio_tiler.profiles import img_profiles
-from rio_tiler.reader import multi_point
 from rio_tiler.utils import geotiff_options, render
 from rio_tiler_mosaic.methods import defaults
 from rio_tiler_mosaic.mosaic import mosaic_tiler
-from usgs_topo_mosaic.utils import _aws_head_object, _get_layer_names, _postprocess
+from usgs_topo_mosaic.utils import _aws_head_object, _get_layer_names
 from usgs_topo_tiler import tile as usgs_tiler
 
 from cogeo_mosaic import version as mosaic_version
@@ -262,69 +261,6 @@ def _tilejson(
     return ("OK", "application/json", json.dumps(response, separators=(",", ":")))
 
 
-@app.get("/<int:z>/<int:x>/<int:y>.pbf", **params)
-@app.get("/<regex([0-9A-Fa-f]{56}):mosaicid>/<int:z>/<int:x>/<int:y>.pbf", **params)
-def _mvt(
-    mosaicid: str = None,
-    z: int = None,
-    x: int = None,
-    y: int = None,
-    url: str = None,
-    tile_size: Union[str, int] = 256,
-    pixel_selection: str = "first",
-    feature_type: str = "point",
-    resampling_method: str = "nearest",
-) -> Tuple:
-    """Handle MVT requests."""
-    from rio_tiler_mvt.mvt import encoder as mvtEncoder  # noqa
-
-    if not mosaicid and not url:
-        return ("NOK", "text/plain", "Missing 'MosaicID or URL' parameter")
-
-    mosaic_path = _create_mosaic_path(mosaicid) if mosaicid else url
-    with MosaicBackend(mosaic_path) as mosaic:
-        assets = mosaic.tile(x, y, z)
-        if not assets:
-            return ("EMPTY", "text/plain", f"No assets found for tile {z}-{x}-{y}")
-
-    if tile_size is not None and isinstance(tile_size, str):
-        tile_size = int(tile_size)
-
-    if pixel_selection == "last":
-        pixel_selection = "first"
-        assets = list(reversed(assets))
-
-    with rasterio.Env(aws_session):
-        pixsel_method = PIXSEL_METHODS[pixel_selection]
-        tile, mask = mosaic_tiler(
-            assets,
-            x,
-            y,
-            z,
-            cogeoTiler,
-            tilesize=tile_size,
-            pixel_selection=pixsel_method(),
-            resampling_method=resampling_method,
-        )
-        if tile is None:
-            return ("EMPTY", "text/plain", "empty tiles")
-
-        with rasterio.open(assets[0]) as src_dst:
-            band_descriptions = _get_layer_names(src_dst)
-
-        return (
-            "OK",
-            "application/x-protobuf",
-            mvtEncoder(
-                tile,
-                mask,
-                band_descriptions,
-                mosaicid or os.path.basename(url),
-                feature_type=feature_type,
-            ),
-        )
-
-
 @app.get("/<int:z>/<int:x>/<int:y>.<ext>", **params)
 @app.get("/<int:z>/<int:x>/<int:y>", **params)
 @app.get("/<int:z>/<int:x>/<int:y>@<int:scale>x.<ext>", **params)
@@ -346,9 +282,6 @@ def _img(
     scale: int = 1,
     ext: str = None,
     url: str = None,
-    indexes: Optional[Sequence[int]] = None,
-    rescale: str = None,
-    color_ops: str = None,
     pixel_selection: str = "first",
     resampling_method: str = "nearest",
 ) -> Tuple:
@@ -361,9 +294,6 @@ def _img(
         assets = mosaic.tile(x, y, z)
         if not assets:
             return ("EMPTY", "text/plain", f"No assets found for tile {z}-{x}-{y}")
-
-    if indexes is not None and isinstance(indexes, str):
-        indexes = list(map(int, indexes.split(",")))
 
     tilesize = 256 * scale
 
@@ -379,7 +309,6 @@ def _img(
             y,
             z,
             usgs_tiler,
-            indexes=indexes,
             tilesize=tilesize,
             pixel_selection=pixsel_method(),
             resampling_method=resampling_method,
@@ -387,8 +316,6 @@ def _img(
 
     if tile is None:
         return ("EMPTY", "text/plain", "empty tiles")
-
-    rtile = _postprocess(tile, mask, rescale=rescale, color_formula=color_ops)
 
     if not ext:
         ext = "jpg" if mask.all() else "png"
@@ -404,47 +331,8 @@ def _img(
     return (
         "OK",
         f"image/{ext}",
-        render(rtile, mask, img_format=driver, **options),
+        render(tile, mask, img_format=driver, **options),
     )
-
-
-@app.get("/point", **params)
-@app.get("/<regex([0-9A-Fa-f]{56}):mosaicid>/point", **params)
-def _point(
-    mosaicid: str = None, lng: float = None, lat: float = None, url: str = None
-) -> Tuple[str, str, str]:
-    """Handle point requests."""
-    if not mosaicid and not url:
-        return ("NOK", "text/plain", "Missing 'MosaicID or URL' parameter")
-
-    if not lat or not lng:
-        return ("NOK", "text/plain", "Missing 'Lon/Lat' parameter")
-
-    if isinstance(lng, str):
-        lng = float(lng)
-
-    if isinstance(lat, str):
-        lat = float(lat)
-
-    mosaic_path = _create_mosaic_path(mosaicid) if mosaicid else url
-    with MosaicBackend(mosaic_path) as mosaic:
-        assets = mosaic.point(lng, lat)
-        if not assets:
-            return (
-                "EMPTY",
-                "text/plain",
-                f"No assets found for lat/lng ({lat}, {lng})",
-            )
-
-    with rasterio.Env(aws_session):
-        meta = {
-            "coordinates": [lng, lat],
-            "values": [
-                {"asset": assets[ix], "values": value}
-                for ix, value in enumerate(multi_point(assets, coordinates=(lng, lat)))
-            ],
-        }
-        return ("OK", "application/json", json.dumps(meta, separators=(",", ":")))
 
 
 @app.get("/favicon.ico", tag=["other"])

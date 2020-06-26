@@ -2,41 +2,8 @@
 
 from urllib.parse import urlparse
 
-import numpy
 from boto3.session import Session as boto3_session
 from botocore.exceptions import ClientError
-from rio_color.operations import parse_operations
-from rio_color.utils import scale_dtype, to_math_type
-from rio_tiler.utils import linear_rescale
-
-
-def _postprocess(
-    tile: numpy.ndarray,
-    mask: numpy.ndarray,
-    rescale: str = None,
-    color_formula: str = None,
-) -> numpy.ndarray:
-    """Tile data post processing."""
-    if rescale:
-        rescale_arr = (tuple(map(float, rescale.split(","))),) * tile.shape[0]
-        for bdx in range(tile.shape[0]):
-            tile[bdx] = numpy.where(
-                mask,
-                linear_rescale(
-                    tile[bdx], in_range=rescale_arr[bdx], out_range=[0, 255]
-                ),
-                0,
-            )
-        tile = tile.astype(numpy.uint8)
-
-    if color_formula:
-        # make sure one last time we don't have
-        # negative value before applying color formula
-        tile[tile < 0] = 0
-        for ops in parse_operations(color_formula):
-            tile = scale_dtype(ops(to_math_type(tile)), numpy.uint8)
-
-    return tile
 
 
 def _get_layer_names(src_dst):
