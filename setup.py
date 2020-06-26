@@ -18,9 +18,9 @@ extra_reqs = {
 
 setup(
     name="usgs-topo-mosaic",
-    version="0.0.2",
-    description=u"Serve Map tile from Cloud Optimized GeoTIFF mosaics.",
-    long_description=u"Serve Map tile from Cloud Optimized GeoTIFF mosaics.",
+    version="0.1.0",
+    description=u"Serverless USGS Historical Topographic map tiles.",
+    long_description=u"Serverless USGS Historical Topographic map tiles.",
     python_requires=">=3",
     classifiers=[
         "Intended Audience :: Information Technology",

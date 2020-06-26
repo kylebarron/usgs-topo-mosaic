@@ -16,13 +16,13 @@ from rio_tiler.profiles import img_profiles
 from rio_tiler.utils import geotiff_options, render
 from rio_tiler_mosaic.methods import defaults
 from rio_tiler_mosaic.mosaic import mosaic_tiler
-from usgs_topo_mosaic.utils import _aws_head_object, _get_layer_names
 from usgs_topo_tiler import tile as usgs_tiler
 
 from cogeo_mosaic import version as mosaic_version
 from cogeo_mosaic.backends import MosaicBackend
 from cogeo_mosaic.backends.utils import get_hash
 from cogeo_mosaic.mosaic import MosaicJSON
+from usgs_topo_mosaic.utils import _aws_head_object, _get_layer_names
 
 session = boto3_session()
 s3_client = session.client("s3")
