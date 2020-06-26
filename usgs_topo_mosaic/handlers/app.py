@@ -18,7 +18,6 @@ from rio_tiler.reader import multi_point
 from rio_tiler.utils import geotiff_options, render
 from rio_tiler_mosaic.methods import defaults
 from rio_tiler_mosaic.mosaic import mosaic_tiler
-from usgs_topo_mosaic import custom_methods
 from usgs_topo_mosaic.custom_cmaps import get_custom_cmap
 from usgs_topo_mosaic.utils import _aws_head_object, _get_layer_names, _postprocess
 from usgs_topo_tiler import tile as usgs_tiler
@@ -39,7 +38,6 @@ PIXSEL_METHODS = {
     "mean": defaults.MeanMethod,
     "median": defaults.MedianMethod,
     "stdev": defaults.StdevMethod,
-    "bdix_stdev": custom_methods.bidx_stddev,
 }
 app = API(name="cogeo-mosaic-tiler")
 
