@@ -107,9 +107,7 @@ def _create(
             mosaic.write()
             meta = mosaic.metadata
 
-    if tile_format in ["pbf", "mvt"]:
-        tile_url = f"{app.host}/{mosaicid}/{{z}}/{{x}}/{{y}}.{tile_format}"
-    elif tile_format in ["png", "jpg", "webp", "tif", "npy"]:
+    if tile_format in ["png", "jpg", "webp", "tif"]:
         tile_url = (
             f"{app.host}/{mosaicid}/{{z}}/{{x}}/{{y}}@{tile_scale}x.{tile_format}"
         )
@@ -155,7 +153,6 @@ params["cache_control"] = os.environ.get("CACHE_CONTROL", None)
 
 
 @app.get("/info", tag=["metadata"], **params)
-@app.get("/<regex([0-9A-Fa-f]{56}):mosaicid>/info", tag=["metadata"], **params)
 def _info(mosaicid: str = None, url: str = None) -> Tuple:
     """Handle /info requests."""
     if not mosaicid and not url:
@@ -192,7 +189,6 @@ def _info(mosaicid: str = None, url: str = None) -> Tuple:
 
 
 @app.get("/geojson", tag=["metadata"], **params)
-@app.get("/<regex([0-9A-Fa-f]{56}):mosaicid>/geojson", tag=["metadata"], **params)
 def _geojson(mosaicid: str = None, url: str = None) -> Tuple:
     """Handle /geojson requests."""
     if not mosaicid and not url:
@@ -217,7 +213,6 @@ params["tag"] = ["tiles"]
 
 
 @app.get("/tilejson.json", **params)
-@app.get("/<regex([0-9A-Fa-f]{56}):mosaicid>/tilejson.json", **params)
 def _tilejson(
     mosaicid: str = None,
     url: str = None,
@@ -235,9 +230,7 @@ def _tilejson(
     else:
         host = f"{app.host}/{mosaicid}"
 
-    if tile_format in ["pbf", "mvt"]:
-        tile_url = f"{host}/{{z}}/{{x}}/{{y}}.{tile_format}"
-    elif tile_format in ["png", "jpg", "webp", "tif", "npy"]:
+    if tile_format in ["png", "jpg", "webp", "tif"]:
         tile_url = f"{host}/{{z}}/{{x}}/{{y}}@{tile_scale}x.{tile_format}"
     else:
         tile_url = f"{host}/{{z}}/{{x}}/{{y}}@{tile_scale}x"
@@ -265,15 +258,6 @@ def _tilejson(
 @app.get("/<int:z>/<int:x>/<int:y>", **params)
 @app.get("/<int:z>/<int:x>/<int:y>@<int:scale>x.<ext>", **params)
 @app.get("/<int:z>/<int:x>/<int:y>@<int:scale>x", **params)
-@app.get("/<regex([0-9A-Fa-f]{56}):mosaicid>/<int:z>/<int:x>/<int:y>.<ext>", **params)
-@app.get("/<regex([0-9A-Fa-f]{56}):mosaicid>/<int:z>/<int:x>/<int:y>", **params)
-@app.get(
-    "/<regex([0-9A-Fa-f]{56}):mosaicid>/<int:z>/<int:x>/<int:y>@<int:scale>x.<ext>",
-    **params,
-)
-@app.get(
-    "/<regex([0-9A-Fa-f]{56}):mosaicid>/<int:z>/<int:x>/<int:y>@<int:scale>x", **params
-)
 def _img(
     mosaicid: str = None,
     z: int = None,
