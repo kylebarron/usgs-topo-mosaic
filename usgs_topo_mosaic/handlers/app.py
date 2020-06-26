@@ -12,13 +12,11 @@ import rasterio
 from boto3.session import Session as boto3_session
 from lambda_proxy.proxy import API
 from rasterio.session import AWSSession
-from rio_tiler.colormap import get_colormap
 from rio_tiler.profiles import img_profiles
 from rio_tiler.reader import multi_point
 from rio_tiler.utils import geotiff_options, render
 from rio_tiler_mosaic.methods import defaults
 from rio_tiler_mosaic.mosaic import mosaic_tiler
-from usgs_topo_mosaic.custom_cmaps import get_custom_cmap
 from usgs_topo_mosaic.utils import _aws_head_object, _get_layer_names, _postprocess
 from usgs_topo_tiler import tile as usgs_tiler
 
@@ -351,7 +349,6 @@ def _img(
     indexes: Optional[Sequence[int]] = None,
     rescale: str = None,
     color_ops: str = None,
-    color_map: str = None,
     pixel_selection: str = "first",
     resampling_method: str = "nearest",
 ) -> Tuple:
@@ -392,11 +389,6 @@ def _img(
         return ("EMPTY", "text/plain", "empty tiles")
 
     rtile = _postprocess(tile, mask, rescale=rescale, color_formula=color_ops)
-    if color_map:
-        if color_map.startswith("custom_"):
-            color_map = get_custom_cmap(color_map)
-        else:
-            color_map = get_colormap(color_map)
 
     if not ext:
         ext = "jpg" if mask.all() else "png"
@@ -412,7 +404,7 @@ def _img(
     return (
         "OK",
         f"image/{ext}",
-        render(rtile, mask, img_format=driver, colormap=color_map, **options),
+        render(rtile, mask, img_format=driver, **options),
     )
 
 
