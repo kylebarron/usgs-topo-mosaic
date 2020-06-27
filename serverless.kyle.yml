@@ -62,9 +62,10 @@ provider:
      Action:
        - "s3:GetObject"
        - "s3:HeadObject"
-       - "s3:PutObject"
+       # Uncomment if you implement custom mosaics on demand
+       # - "s3:PutObject"
      Resource:
-       - "arn:aws:s3:::${opt:bucket}*"
+       - "arn:aws:s3:::${self:provider.deploymentBucket}*"
   -  Effect: "Allow"
      Action:
        - "s3:GetObject"
@@ -99,7 +100,7 @@ functions:
       GDAL_HTTP_MULTIPLEX: YES
       GDAL_HTTP_VERSION: 2
       MAX_THREADS: 10
-      MOSAIC_DEF_BUCKET: ${opt:bucket}
+      MOSAIC_DEF_BUCKET: ${self:provider.deploymentBucket}
       PROJ_LIB: /opt/share/proj
       PYTHONWARNINGS: ignore
       VSI_CACHE: TRUE
