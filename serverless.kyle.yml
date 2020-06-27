@@ -35,7 +35,7 @@ provider:
         - https://landsat8.earth
         - https://nst.guide
         - https://nstguide.com
-        - https://sentine2.earth
+        - https://sentinel2.earth
         - https://trails3d.com
       allowedHeaders:
         - Authorization
