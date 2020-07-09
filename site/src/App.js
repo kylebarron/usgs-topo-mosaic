@@ -58,7 +58,6 @@ const scaleChoiceOptions = [
 function usgsTopoUrl(url) {
   const params = {
     url,
-    tile_scale: 2,
     tile_format: "jpg",
   };
   const searchParams = new URLSearchParams(params);
