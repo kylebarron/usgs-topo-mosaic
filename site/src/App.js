@@ -71,16 +71,19 @@ function constructMapStyle(mosaic_choice) {
     type: "raster",
     url: usgsTopoUrl(urls.low[mosaic_choice]),
     attribution: '<a href="https://www.usgs.gov/" target="_blank">© USGS</a>',
+    tileSize: 256,
   };
   defaultMapStyle.sources["usgs-topo-medium-zoom"] = {
     type: "raster",
     url: usgsTopoUrl(urls.medium[mosaic_choice]),
     attribution: '<a href="https://www.usgs.gov/" target="_blank">© USGS</a>',
+    tileSize: 256,
   };
   defaultMapStyle.sources["usgs-topo-high-zoom"] = {
     type: "raster",
     url: usgsTopoUrl(urls.high[mosaic_choice]),
     attribution: '<a href="https://www.usgs.gov/" target="_blank">© USGS</a>',
+    tileSize: 256,
   };
   return Map(defaultMapStyle);
 }
