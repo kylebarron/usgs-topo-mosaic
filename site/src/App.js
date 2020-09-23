@@ -218,7 +218,7 @@ class App extends React.Component {
                 "hillshade-shadow-color": "hsl(39, 21%, 33%)",
                 "hillshade-illumination-anchor": "map",
                 "hillshade-illumination-direction": 315,
-                "hillshade-exaggeration": 0.3,
+                "hillshade-exaggeration": 0.15,
               }}
               layout={{
                 visibility: terrainRelief ? "visible" : "none",
