@@ -265,8 +265,26 @@ class App extends React.Component {
             <Accordion.Content active={optionsExpanded}>
               <p>
                 The entire USGS archive of 183,000 digitized maps created
-                between 1884 and 2006 is publicly accessible online. Explore a
-                portion interactively here.
+                between 1884 and 2006 is publicly accessible in{" "}
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://cogeo.org"
+                >
+                  Cloud-Optimized GeoTIFF
+                </a>{" "}
+                format. Explore a portion interactively here.
+              </p>
+
+              <p>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://github.com/kylebarron/usgs-topo-tiler"
+                >
+                  <Icon name="github" />
+                  Github
+                </a>
               </p>
 
               {belowMinZoom(scale_choice, zoom) && (
@@ -298,29 +316,6 @@ class App extends React.Component {
                 checked={terrainRelief}
                 style={{ padding: 5 }}
               />
-
-              <p>
-                <p>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://github.com/kylebarron/usgs-topo-tiler"
-                  >
-                    <Icon name="github" />
-                    Github
-                  </a>
-                </p>
-                {/* <p>
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://kylebarron.dev/blog"
-                  >
-                    <Icon name="book" />
-                    Blog post
-                  </a>
-                </p> */}
-              </p>
             </Accordion.Content>
           </Accordion>
         </Container>
